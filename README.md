@@ -80,6 +80,21 @@ gradle build
 
 `build/libs/MinaraiGuard-<バージョン>.jar` が生成されます。
 
+## 開発(IntelliJ IDEA で Claude Code を使う)
+
+このリポジトリには、AI コーディングツール [Claude Code](https://docs.claude.com/ja/docs/claude-code/overview) 向けの作業ルールを書いた `CLAUDE.md` があります。IntelliJ IDEA で使う手順は次のとおりです。
+
+1. Claude の有料プラン(Pro / Max)か、Anthropic API のアカウントを用意します。
+2. Windows では、先に [Git for Windows](https://git-scm.com/downloads/win) をインストールします。
+3. Claude Code 本体をインストールします。Windows では PowerShell で次を実行します。
+   ```
+   irm https://claude.ai/install.ps1 | iex
+   ```
+4. IntelliJ IDEA の「設定 → プラグイン → Marketplace」で「Claude Code」を検索してインストールし、IDE を再起動します。検索結果には Anthropic 以外が作った似た名前のプラグインも表示されます。プラグイン名の下に書かれた提供元が「Anthropic」になっているものを選んでください。
+5. プロジェクトを開いて、ターミナルで `claude` を実行します(`Ctrl+Esc` でも起動できます)。初回はブラウザでログインします。
+
+起動すると `CLAUDE.md` が自動で読み込まれ、このプロジェクトの設計方針に沿って作業します。
+
 ## コマンド
 
 | コマンド | 説明 | 権限 |
