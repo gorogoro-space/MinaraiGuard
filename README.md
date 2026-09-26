@@ -177,3 +177,11 @@ server.properties の `spawn-protection`(バニラのスポーン保護)が有�
 ## ライセンス
 
 [LICENSE](LICENSE) を参照してください。
+
+## kubotan へのメモ
+
+リポジトリを新規作成したら、**必ず Watch を設定すること**(忘れない!)。
+GitHub の自動 Watch 機能は 2025 年 5 月に廃止されたため、設定しないと他の人が立てた issue や PR の通知が届かない。
+
+1. リポジトリのページ右上の **「Watch」** を押す
+2. **「Custom」** を選び、**Issues** と **Pull requests** にチェックを入れる
