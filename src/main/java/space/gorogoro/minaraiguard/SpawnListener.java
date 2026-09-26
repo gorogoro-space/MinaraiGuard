@@ -83,9 +83,18 @@ final class SpawnListener implements Listener {
                 }
             }
         }
-        if (!inside || bypass(e.getPlayer())) return;
+        Player p = e.getPlayer();
+        if (!inside || bypass(p)) return;
+        // 看板など、昇格後のプレイヤーが置いてよいブロック
+        if (plugin.settings().spawnMemberBlocks.contains(e.getBlockPlaced().getType())) {
+            if (!plugin.apprentices().isApprentice(p)) return;
+            e.setCancelled(true);
+            plugin.messenger().denied(p, "spawn-member-apprentice", false, true,
+                    Placeholder.unparsed("remaining", plugin.apprentices().remainingText(p)));
+            return;
+        }
         e.setCancelled(true);
-        denyChange(e.getPlayer());
+        denyChange(p);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

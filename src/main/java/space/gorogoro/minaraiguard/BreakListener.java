@@ -30,7 +30,10 @@ final class BreakListener implements Listener {
     private Decision decide(Player p, Block b) {
         GuardSettings s = plugin.settings();
         if (s.spawn.contains(b)) {
-            return p.hasPermission(Perms.BYPASS) ? Decision.ALLOW : Decision.SPAWN;
+            if (p.hasPermission(Perms.BYPASS)) return Decision.ALLOW;
+            // 看板など、昇格後のプレイヤーが壊してよいブロック(他人の看板は LWC が守る)
+            if (s.spawnMemberBlocks.contains(b.getType()) && !plugin.apprentices().isApprentice(p)) return Decision.ALLOW;
+            return Decision.SPAWN;
         }
         if (!plugin.apprentices().isApprentice(p)) return Decision.ALLOW;
         if (!s.apprenticeWorlds.contains(b.getWorld().getName())) return Decision.ALLOW;

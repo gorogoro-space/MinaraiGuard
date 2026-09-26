@@ -7,7 +7,8 @@
 
 # ----- スポーン保護(必須) -----
 # 範囲内では全員がブロックの破壊・設置・バケツ使用をできません
-# (minarai.bypass 権限を持つ管理者を除く)。
+# (minarai.bypass 権限を持つ管理者を除く。看板など spawn-interaction.member-blocks の
+#  ブロックは、昇格後のプレイヤーなら設置・破壊できます)。
 # 高さは問わず X・Z だけで判定し、境界の座標も範囲に含みます。
 spawn-protection:
   world: world
@@ -126,6 +127,11 @@ spawn-interaction:
     - DRAGON_EGG
     - END_PORTAL_FRAME
 
+  # 昇格後のプレイヤーがスポーン内で設置・破壊できるブロック(見習いは不可)
+  # 他の人が置いた看板は LWC の自動保護で守られる前提です
+  member-blocks:
+    - "#all_signs"
+
   # スポーン内に置いてよいトロッコ
   allowed-minecarts:
     - MINECART
@@ -163,6 +169,8 @@ messages:
   spawn-interact: "<red>スポーン地点ではこのブロックを操作できません</red>"
   spawn-tool: "<red>スポーン地点ではこの道具を使えません</red>"
   spawn-cart: "<red>スポーン地点では<cart>は置けません。</red><gray>乗るときは普通のトロッコを使ってください</gray>"
+  # 見習いがスポーン内に member-blocks(看板など)を置こうとしたとき
+  spawn-member-apprentice: "<red>見習い期間中はスポーン地点に看板を設置できません</red><gray>(昇格まであと<remaining>)</gray>"
 
   # 警戒モード中のチャット
   warning: "<gold>ここでは壊せません。資源集めは資源ゲートへ</gold>"

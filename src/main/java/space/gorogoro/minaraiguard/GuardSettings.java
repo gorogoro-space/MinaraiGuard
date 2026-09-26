@@ -31,7 +31,7 @@ final class GuardSettings {
     private static final List<String> MESSAGE_KEYS = List.of(
             "prefix",
             "apprentice-building", "apprentice-resource",
-            "spawn-change", "spawn-interact", "spawn-tool", "spawn-cart",
+            "spawn-change", "spawn-interact", "spawn-tool", "spawn-cart", "spawn-member-apprentice",
             "warning",
             "shigen-guide", "reset-notice", "reset-notice-soon", "minarai-guide",
             "shigen-teleported", "shigen-failed", "setgate-success",
@@ -66,6 +66,7 @@ final class GuardSettings {
 
     // スポーン内の操作
     EnumSet<Material> spawnDenyBlocks;
+    EnumSet<Material> spawnMemberBlocks;
     Set<EntityType> allowedCarts;
 
     // 道具ごとの「変化させられるブロック」
@@ -123,6 +124,7 @@ final class GuardSettings {
         s.resourceBlocks = materials(c.getStringList("apprentice.resource-blocks"), "apprentice.resource-blocks", log);
 
         s.spawnDenyBlocks = materials(c.getStringList("spawn-interaction.deny-blocks"), "spawn-interaction.deny-blocks", log);
+        s.spawnMemberBlocks = materials(c.getStringList("spawn-interaction.member-blocks"), "spawn-interaction.member-blocks", log);
         s.allowedCarts = entityTypes(c.getStringList("spawn-interaction.allowed-minecarts"), log);
 
         s.copperBlocks = copperBlocks();
