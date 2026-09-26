@@ -18,7 +18,7 @@
 ## 環境
 
 - Paper 1.21.11 / Java 21
-- ビルド: `gradlew.bat build`(Windows)。成果物は `build/libs/`
+- ビルド: `gradlew.bat clean build`(Windows)。「ビルドして」と言われたら常にクリーンビルドする。成果物は `build/libs/`
 - パッケージ: `space.gorogoro.minaraiguard`(**すべて小文字**。大文字が混ざると plugin.yml の main と一致せず起動しない)
 - 動作確認はサーバーを再起動して行う。PlugManX での読み込みは権限やコマンドの登録が不完全になることがある
 
