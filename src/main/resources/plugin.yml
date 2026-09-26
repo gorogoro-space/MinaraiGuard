@@ -1,0 +1,30 @@
+name: MinaraiGuard
+version: '${version}'
+main: space.gorogoro.minaraiguard.MinaraiGuard
+api-version: '1.21'
+description: 新規プレイヤーの見習い期間とスポーン地点の保護で、他の人の建築と景観を守ります
+
+commands:
+  minarai:
+    description: 見習い期間の残り時間を確認します
+    usage: /minarai [reload|setgate]
+  shigen:
+    description: 資源ゲートの前へ移動します
+    usage: /shigen
+
+permissions:
+  minarai.bypass:
+    description: スポーン保護を無視してブロックを変更できます
+    default: op
+  minarai.exempt:
+    description: 見習いとして扱われません
+    default: op
+  minarai.notify:
+    description: 警戒モードに入ったプレイヤーの通知を受け取ります
+    default: op
+  minarai.shigen:
+    description: /shigen で資源ゲートへ移動できます(false にした場合のみ使えなくなります)
+    default: true
+  minarai.admin:
+    description: /minarai reload と /minarai setgate を実行できます
+    default: op
