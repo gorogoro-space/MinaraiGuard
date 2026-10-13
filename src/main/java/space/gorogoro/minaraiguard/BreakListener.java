@@ -39,9 +39,10 @@ final class BreakListener implements Listener {
         if (!s.apprenticeWorlds.contains(b.getWorld().getName())) return Decision.ALLOW;
 
         Material type = b.getType();
-        if (s.terrainBlocks.contains(type)) return Decision.ALLOW;
+        GuardSettings.BlockLists lists = s.blocks(b.getWorld().getName());
+        if (lists.terrain().contains(type)) return Decision.ALLOW;
         if (plugin.placements().isOwner(p.getUniqueId(), b)) return Decision.ALLOW;
-        return s.resourceBlocks.contains(type) ? Decision.RESOURCE : Decision.BUILDING;
+        return lists.resource().contains(type) ? Decision.RESOURCE : Decision.BUILDING;
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

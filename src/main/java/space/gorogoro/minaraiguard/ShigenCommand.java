@@ -9,16 +9,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.function.Function;
+
 /**
- * /shigen 資源ゲート前へ移動する。
+ * /shigen・/shigennether 資源ゲート・資源ネザーゲート前へ移動する。
  * 非同期テレポートを使うので、移動先のチャンクが未読み込みでもサーバーは止まらない。
  */
 final class ShigenCommand implements CommandExecutor {
 
     private final MinaraiGuard plugin;
+    private final Function<GuardSettings, GuardSettings.Gate> gate;
+    private final String permission;
+    private final String messagePrefix; // メッセージキーの接頭辞(shigen / shigennether)
 
-    ShigenCommand(MinaraiGuard plugin) {
+    ShigenCommand(MinaraiGuard plugin, Function<GuardSettings, GuardSettings.Gate> gate,
+                  String permission, String messagePrefix) {
         this.plugin = plugin;
+        this.gate = gate;
+        this.permission = permission;
+        this.messagePrefix = messagePrefix;
     }
 
     @Override
@@ -29,30 +38,35 @@ final class ShigenCommand implements CommandExecutor {
             return true;
         }
         // 全員が使える前提。権限管理プラグインで明示的に false にされた場合だけ拒否する
-        if (p.isPermissionSet(Perms.SHIGEN) && !p.hasPermission(Perms.SHIGEN)) {
+        if (p.isPermissionSet(permission) && !p.hasPermission(permission)) {
             m.chat(p, m.render("no-permission"));
             return true;
         }
-        GuardSettings s = plugin.settings();
-        World w = Bukkit.getWorld(s.gateWorld);
+        GuardSettings.Gate g = gate.apply(plugin.settings());
+        if (g == null) {
+            plugin.getLogger().warning("/" + label + " の移動先が設定されていません(/minarai setgate nether で設定してください)");
+            m.chat(p, m.render(messagePrefix + "-failed"));
+            return true;
+        }
+        World w = Bukkit.getWorld(g.world());
         if (w == null) {
-            plugin.getLogger().warning("資源ゲートのワールド " + s.gateWorld + " が見つかりません");
-            m.chat(p, m.render("shigen-failed"));
+            plugin.getLogger().warning("/" + label + " の移動先のワールド " + g.world() + " が見つかりません");
+            m.chat(p, m.render(messagePrefix + "-failed"));
             return true;
         }
         if (p.isInsideVehicle()) p.leaveVehicle();
 
-        if (s.gateY != null) {
-            teleport(p, new Location(w, s.gateX, s.gateY, s.gateZ, s.gateYaw, s.gatePitch));
+        if (g.y() != null) {
+            teleport(p, new Location(w, g.x(), g.y(), g.z(), g.yaw(), g.pitch()));
             return true;
         }
         // 高さが未設定なら、チャンクを非同期で読み込んでから地表の高さを調べる
-        int bx = (int) Math.floor(s.gateX);
-        int bz = (int) Math.floor(s.gateZ);
+        int bx = (int) Math.floor(g.x());
+        int bz = (int) Math.floor(g.z());
         w.getChunkAtAsync(bx >> 4, bz >> 4).thenAccept(chunk -> {
             if (!p.isOnline()) return;
             double y = w.getHighestBlockYAt(bx, bz) + 1;
-            teleport(p, new Location(w, s.gateX, y, s.gateZ, s.gateYaw, s.gatePitch));
+            teleport(p, new Location(w, g.x(), y, g.z(), g.yaw(), g.pitch()));
         });
         return true;
     }
@@ -62,10 +76,10 @@ final class ShigenCommand implements CommandExecutor {
         p.teleportAsync(loc, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(ok -> {
             if (!p.isOnline()) return;
             if (ok) {
-                m.chat(p, m.render("shigen-teleported"));
+                m.chat(p, m.render(messagePrefix + "-teleported"));
                 Messenger.line(p, m.resetNotice());
             } else {
-                m.chat(p, m.render("shigen-failed"));
+                m.chat(p, m.render(messagePrefix + "-failed"));
             }
         });
     }

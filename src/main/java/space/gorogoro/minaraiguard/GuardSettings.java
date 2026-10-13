@@ -35,6 +35,7 @@ final class GuardSettings {
             "warning",
             "shigen-guide", "reset-notice", "reset-notice-soon", "minarai-guide",
             "shigen-teleported", "shigen-failed", "setgate-success",
+            "shigennether-guide", "shigennether-teleported", "shigennether-failed", "setgate-nether-success",
             "welcome", "promoted-title", "promoted-subtitle",
             "status-apprentice", "status-member", "admin-notify",
             "reload-success", "reload-failed", "no-permission", "player-only");
@@ -44,14 +45,18 @@ final class GuardSettings {
             EntityType.HOPPER_MINECART, EntityType.TNT_MINECART, EntityType.SPAWNER_MINECART,
             EntityType.COMMAND_BLOCK_MINECART);
 
+    /** /shigen・/shigennether の移動先。y が null なら地表に移動 */
+    record Gate(String world, double x, Double y, double z, float yaw, float pitch) {
+    }
+
+    /** 見習いのブロック一覧(地形 = 掘れる、資源 = 掘れず資源ゲートを案内) */
+    record BlockLists(EnumSet<Material> terrain, EnumSet<Material> resource) {
+    }
+
     // スポーン・資源ゲート
     Zone spawn;
-    String gateWorld;
-    double gateX;
-    Double gateY; // null なら地表に移動
-    double gateZ;
-    float gateYaw;
-    float gatePitch;
+    Gate resourceGate;
+    Gate netherGate; // null なら未設定
     int resetDay; // 0 なら案内しない
     int resetWarnDays;
     LocalTime resetTime;
@@ -61,8 +66,8 @@ final class GuardSettings {
     int apprenticeHours;
     long apprenticeTicks;
     Set<String> apprenticeWorlds;
-    EnumSet<Material> terrainBlocks;
-    EnumSet<Material> resourceBlocks;
+    BlockLists defaultBlocks;
+    Map<String, BlockLists> worldBlocks; // world-blocks で個別に指定したワールド
 
     // スポーン内の操作
     EnumSet<Material> spawnDenyBlocks;
@@ -105,13 +110,9 @@ final class GuardSettings {
                 requireInt(c, "spawn-protection.max-x"),
                 requireInt(c, "spawn-protection.max-z"));
 
-        s.gateWorld = requireString(c, "resource-gate.world");
-        s.gateX = requireCoordinate(c, "resource-gate.x");
-        s.gateZ = requireCoordinate(c, "resource-gate.z");
-        s.gateY = c.contains("resource-gate.y", true) && isNumber(c, "resource-gate.y")
-                ? c.getDouble("resource-gate.y") : null;
-        s.gateYaw = (float) c.getDouble("resource-gate.yaw", 0);
-        s.gatePitch = (float) c.getDouble("resource-gate.pitch", 0);
+        s.resourceGate = gate(c, "resource-gate");
+        // 資源ネザーゲートは任意。未設定の間は /shigennether で移動できない
+        s.netherGate = c.contains("resource-nether-gate", true) ? gate(c, "resource-nether-gate") : null;
         s.resetDay = Math.max(0, Math.min(31, c.getInt("resource-reset.day-of-month", 1)));
         s.resetWarnDays = Math.max(0, c.getInt("resource-reset.warn-days", 3));
         s.resetTime = parseTime(c.getString("resource-reset.time"), log);
@@ -120,8 +121,12 @@ final class GuardSettings {
         s.apprenticeHours = Math.max(0, c.getInt("apprentice.hours", 5));
         s.apprenticeTicks = s.apprenticeHours * 72_000L; // 1時間 = 72000tick
         s.apprenticeWorlds = new HashSet<>(c.getStringList("apprentice.worlds"));
-        s.terrainBlocks = materials(c.getStringList("apprentice.terrain-blocks"), "apprentice.terrain-blocks", log);
-        s.resourceBlocks = materials(c.getStringList("apprentice.resource-blocks"), "apprentice.resource-blocks", log);
+        s.defaultBlocks = blockLists(c, "apprentice", log);
+        s.worldBlocks = new HashMap<>();
+        for (String world : s.apprenticeWorlds) {
+            String path = "apprentice.world-blocks." + world;
+            if (c.contains(path)) s.worldBlocks.put(world, blockLists(c, path, log));
+        }
 
         s.spawnDenyBlocks = materials(c.getStringList("spawn-interaction.deny-blocks"), "spawn-interaction.deny-blocks", log);
         s.spawnMemberBlocks = materials(c.getStringList("spawn-interaction.member-blocks"), "spawn-interaction.member-blocks", log);
@@ -175,7 +180,28 @@ final class GuardSettings {
         return cartNames.getOrDefault(type, type.name());
     }
 
+    /** そのワールドで使う見習いのブロック一覧 */
+    BlockLists blocks(String world) {
+        return worldBlocks.getOrDefault(world, defaultBlocks);
+    }
+
     // ---- 解析ヘルパー ----
+
+    private static Gate gate(FileConfiguration c, String path) {
+        return new Gate(
+                requireString(c, path + ".world"),
+                requireCoordinate(c, path + ".x"),
+                c.contains(path + ".y", true) && isNumber(c, path + ".y") ? c.getDouble(path + ".y") : null,
+                requireCoordinate(c, path + ".z"),
+                (float) c.getDouble(path + ".yaw", 0),
+                (float) c.getDouble(path + ".pitch", 0));
+    }
+
+    private static BlockLists blockLists(FileConfiguration c, String path, Logger log) {
+        return new BlockLists(
+                materials(c.getStringList(path + ".terrain-blocks"), path + ".terrain-blocks", log),
+                materials(c.getStringList(path + ".resource-blocks"), path + ".resource-blocks", log));
+    }
 
     private static String requireString(FileConfiguration c, String path) {
         if (!c.contains(path, true) || !c.isString(path)) {

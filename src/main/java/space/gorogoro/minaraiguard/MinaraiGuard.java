@@ -58,7 +58,11 @@ public final class MinaraiGuard extends JavaPlugin {
             cmd.setTabCompleter(executor);
         }
         PluginCommand shigen = getCommand("shigen");
-        if (shigen != null) shigen.setExecutor(new ShigenCommand(this));
+        if (shigen != null) shigen.setExecutor(new ShigenCommand(this, s -> s.resourceGate, Perms.SHIGEN, "shigen"));
+        PluginCommand shigenNether = getCommand("shigennether");
+        if (shigenNether != null) {
+            shigenNether.setExecutor(new ShigenCommand(this, s -> s.netherGate, Perms.SHIGEN_NETHER, "shigennether"));
+        }
 
         for (Player p : getServer().getOnlinePlayers()) apprentices.refresh(p);
         getServer().getScheduler().runTaskTimer(this, apprentices::tick, PROMOTION_CHECK_TICKS, PROMOTION_CHECK_TICKS);

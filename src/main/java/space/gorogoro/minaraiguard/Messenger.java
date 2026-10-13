@@ -6,6 +6,7 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -68,20 +69,26 @@ final class Messenger {
             lastWarningChat.put(id, now);
             guided.add(id);
             chat(p, render("warning"));
-            line(p, render("shigen-guide"));
+            line(p, render(gateGuideKey(p)));
             line(p, render("minarai-guide"));
             return;
         }
 
         if (!guided.add(id)) return; // このログイン中はすでに案内済み
         chat(p, body);
-        if (gate) line(p, render("shigen-guide"));
+        if (gate) line(p, render(gateGuideKey(p)));
         if (guide) line(p, render("minarai-guide"));
+    }
+
+    /** ネザーにいるときは資源ネザーゲート、それ以外は資源ゲートを案内する */
+    private static String gateGuideKey(Player p) {
+        return p.getWorld().getEnvironment() == World.Environment.NETHER ? "shigennether-guide" : "shigen-guide";
     }
 
     void welcome(Player p) {
         chat(p, render("welcome", Placeholder.unparsed("hours", String.valueOf(plugin.settings().apprenticeHours))));
         line(p, render("shigen-guide"));
+        line(p, render("shigennether-guide"));
         line(p, render("minarai-guide"));
     }
 
@@ -92,6 +99,7 @@ final class Messenger {
             chat(p, render("status-member"));
         }
         line(p, render("shigen-guide"));
+        line(p, render("shigennether-guide"));
     }
 
     void promoted(Player p) {

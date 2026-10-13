@@ -49,9 +49,10 @@
 
 ### 見習い
 - プレイ時間(`Statistic.PLAY_ONE_MINUTE`、既存プレイヤーの過去分も含む)が 5 時間未満のプレイヤー。`minarai.exempt` を持つ人は対象外(OP は既定で対象外)
-- 対象ワールドは `apprentice.worlds`(メインワールドのみ。資源ワールドは入れない)
+- 対象ワールドは `apprentice.worlds`(メインワールドとメインのネザー `world_nether`。資源ワールドは入れない)
 - スポーン外で壊せるもの: 自分が置いたブロック、自分の苗木から育った木、`terrain-blocks`(砂・砂利など。土・草・石は含まない)
 - 壊せないもの: 他人の建築、`resource-blocks`(原木・葉・花・鉱石・土・草・石など。スポーン近くや各所に景観保護用の林がある)
+- `apprentice.world-blocks` でワールドごとの一覧を持てる。ネザーは `terrain-blocks` なし(自分で置いたブロック以外は壊せない)、ネザーラック・砂利・鉱石・菌類などは `resource-blocks`
 - 昇格時はタイトルと効果音で通知
 
 ### スポーン保護(全員対象、`minarai.bypass` を除く)
@@ -65,18 +66,21 @@
 - アクションバー: 制限にかかるたびに毎回
 - 見習いがスポーンに `member-blocks`(看板)を置こうとしたときは、専用のメッセージ(`spawn-member-apprentice`)を出す。チャット案内は /minarai のみ(/shigen は出さない)。壊そうとしたときは通常のスポーンのメッセージ
 - チャット案内(/shigen と /minarai のクリック可能な案内): ログイン中に初めて制限にかかったときの 1 回だけ
+- ネザーで制限にかかったときは、/shigen の代わりに /shigennether を案内する。ようこそメッセージと /minarai では /shigen・/shigennether・/minarai をすべて案内する
 - 警戒モード: 短時間に別々のブロックを壊そうとすると入り、チャット案内を 15 秒間隔で繰り返す。管理者通知は既定でオフ。**判定の仕組みは公開の告知に載せない**
 - 表示を増やしすぎない。プレイヤーが何もしていないときは何も表示しない
 
 ### コマンド
 - `/minarai`: 見習いの残り時間を表示
 - `/shigen`: 資源ゲート前へ移動。全員使える(権限で縛らない。`minarai.shigen` を明示的に false にした場合のみ拒否)。移動後に資源ワールドのリセット案内を表示
+- `/shigennether`: 資源ネザーゲート前へ移動。/shigen と同じ扱い(`minarai.shigennether`)。移動先 `resource-nether-gate` は任意設定で、未設定なら移動できない
 - `/minarai setgate`: 現在地と向きを /shigen の移動先として保存(管理者)
+- `/minarai setgate nether`: 現在地と向きを /shigennether の移動先として保存(管理者)
 - `/minarai reload`: 設定の再読み込み(管理者)
 
 ### 資源ワールドのリセット案内
 - 毎月 1 日 5:20(Asia/Tokyo)にリセット
-- 表示は /shigen の移動時だけ。「あと○日」、1 日未満は「あと○時間○分」。残り 3 日未満は赤の太字
+- 表示は /shigen・/shigennether の移動時だけ(資源ネザーも同じ日時)。「あと○日」、1 日未満は「あと○時間○分」。残り 3 日未満は赤の太字
 
 ## 過去にハマった点
 
@@ -97,5 +101,5 @@
 - `SpawnListener.java`: スポーン保護
 - `PlacementListener.java`: 設置記録の更新
 - `SessionListener.java`: ログイン・ログアウト
-- `MinaraiCommand.java` / `ShigenCommand.java`: コマンド
+- `MinaraiCommand.java` / `ShigenCommand.java`: コマンド(ShigenCommand は /shigen と /shigennether で共用)
 - `Perms.java`: 権限ノード

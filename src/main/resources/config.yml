@@ -29,6 +29,11 @@ resource-gate:
   yaw: -175.4
   pitch: 14.4
 
+# ----- 資源ネザーゲート(任意) -----
+# /shigennether の移動先です。ゲート前に立って /minarai setgate nether を実行すると、
+# resource-gate と同じ形式で resource-nether-gate に保存されます。
+# 未設定の間は /shigennether で移動できません。
+
 # ----- 資源ワールドのリセット -----
 # 毎月この日にリセットされることを案内します(0 で案内しない)。
 resource-reset:
@@ -49,6 +54,7 @@ apprentice:
   # 見習いのルールを適用するワールド(資源ワールドは入れないでください)
   worlds:
   - world
+  - world_nether
 
   # 見習いでもスポーン外なら誰のものでも掘れる地形ブロック
   # ※ここに入れたブロックで作られた建築は、見習いでも壊せてしまいます
@@ -102,6 +108,38 @@ apprentice:
   - SHORT_GRASS
   - TALL_GRASS
   - STONE
+
+  # ワールドごとの一覧。ここに書いたワールドでは、上の terrain-blocks と resource-blocks の
+  # 代わりにこちらを使います(書いていない一覧は空として扱います)。
+  # ネザーでは、resource-blocks を壊そうとしたときに /shigennether を案内します。
+  world-blocks:
+    world_nether:
+      terrain-blocks: []
+      resource-blocks:
+      - NETHERRACK
+      - SOUL_SAND
+      - SOUL_SOIL
+      - GRAVEL
+      - MAGMA_BLOCK
+      - CRIMSON_NYLIUM
+      - WARPED_NYLIUM
+      - NETHER_QUARTZ_ORE
+      - NETHER_GOLD_ORE
+      - ANCIENT_DEBRIS
+      - GLOWSTONE
+      - '#crimson_stems'
+      - '#warped_stems'
+      - NETHER_WART_BLOCK
+      - WARPED_WART_BLOCK
+      - SHROOMLIGHT
+      - CRIMSON_FUNGUS
+      - WARPED_FUNGUS
+      - CRIMSON_ROOTS
+      - WARPED_ROOTS
+      - WEEPING_VINES
+      - WEEPING_VINES_PLANT
+      - TWISTING_VINES
+      - TWISTING_VINES_PLANT
 
 # ----- スポーン内の操作 -----
 spawn-interaction:
@@ -181,6 +219,7 @@ messages:
   # 案内
   shigen-guide: <click:run_command:'/shigen'><hover:show_text:'<gray>クリックで移動'><green>▶
     /shigen で資源ゲートへ移動</green></hover></click>
+  shigennether-guide: "<click:run_command:'/shigennether'><hover:show_text:'<gray>クリックで移動'><red>▶ /shigennether で資源ネザーゲートへ移動</red></hover></click>"
   # <time> はリセット時刻、<remaining> は残り時間(1日以上なら「あと○日」、1日未満なら「あと○時間○分」)
   reset-notice: <yellow>資源ワールドは毎月<day>日<time>にリセットされます(<remaining>)</yellow>
   reset-notice-soon: <red><bold>資源ワールドは毎月<day>日<time>にリセットされます(<remaining>)</bold></red>
@@ -191,6 +230,11 @@ messages:
   shigen-teleported: <green>資源ゲートへ移動しました</green>
   shigen-failed: <red>資源ゲートへ移動できませんでした。管理者に連絡してください</red>
   setgate-success: <green>現在地を資源ゲートの移動先に設定しました</green>
+
+  # /shigennether
+  shigennether-teleported: "<green>資源ネザーゲートへ移動しました</green>"
+  shigennether-failed: "<red>資源ネザーゲートへ移動できませんでした。管理者に連絡してください</red>"
+  setgate-nether-success: "<green>現在地を資源ネザーゲートの移動先に設定しました</green>"
   
   # その他
   welcome: <green>ようこそ!</green><white>最初の<hours>時間は見習い期間で、他の人の建築や景観は壊せません。資源採取は必ず資源ワールドでお願いします</white>
