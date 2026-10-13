@@ -23,14 +23,18 @@ spawn-protection:
 # y を書いていない場合は、X・Z の地表に移動します。
 resource-gate:
   world: world
-  x: -90
-  z: 240
+  x: -91.46
+  z: 245.07
+  y: 70.0
+  yaw: -175.4
+  pitch: 14.4
 
 # ----- 資源ワールドのリセット -----
 # 毎月この日にリセットされることを案内します(0 で案内しない)。
 resource-reset:
   day-of-month: 1
   # リセットされる時刻(24時間表記)
+  # 必ず "05:20" のように引用符で囲んでください
   time: "05:20"
   # 時刻の基準となるタイムゾーン(空欄ならサーバーの設定に従う)
   time-zone: Asia/Tokyo
@@ -41,99 +45,99 @@ resource-reset:
 apprentice:
   # 見習い期間(プレイ時間、単位: 時間)
   hours: 5
-
+  
   # 見習いのルールを適用するワールド(資源ワールドは入れないでください)
   worlds:
-    - world
+  - world
 
   # 見習いでもスポーン外なら誰のものでも掘れる地形ブロック
   # ※ここに入れたブロックで作られた建築は、見習いでも壊せてしまいます
   terrain-blocks:
-    - GRASS_BLOCK
-    - DIRT
-    - COARSE_DIRT
-    - ROOTED_DIRT
-    - PODZOL
-    - MYCELIUM
-    - MUD
-    - CLAY
-    - SAND
-    - RED_SAND
-    - GRAVEL
-    - STONE
-    - DEEPSLATE
-    - GRANITE
-    - DIORITE
-    - ANDESITE
-    - TUFF
-    - CALCITE
-    - SNOW
-    - SNOW_BLOCK
-    - SHORT_GRASS
-    - TALL_GRASS
-    - FERN
-    - LARGE_FERN
-
+  - COARSE_DIRT
+  - ROOTED_DIRT
+  - PODZOL
+  - MYCELIUM
+  - MUD
+  - CLAY
+  - SAND
+  - RED_SAND
+  - GRAVEL
+  - DEEPSLATE
+  - GRANITE
+  - DIORITE
+  - ANDESITE
+  - TUFF
+  - CALCITE
+  - SNOW
+  - SNOW_BLOCK
+  - FERN
+  - LARGE_FERN
+  
   # 壊そうとしたときに「景観・資源ブロック」として資源ゲートを案内するブロック
   resource-blocks:
-    - "#logs"
-    - "#leaves"
-    - "#saplings"
-    - "#flowers"
-    - "#coal_ores"
-    - "#iron_ores"
-    - "#copper_ores"
-    - "#gold_ores"
-    - "#redstone_ores"
-    - "#lapis_ores"
-    - "#diamond_ores"
-    - "#emerald_ores"
-    - PUMPKIN
-    - MELON
-    - SUGAR_CANE
-    - BAMBOO
-    - CACTUS
-    - VINE
-    - SWEET_BERRY_BUSH
-    - MUSHROOM_STEM
-    - RED_MUSHROOM_BLOCK
-    - BROWN_MUSHROOM_BLOCK
+  - '#logs'
+  - '#leaves'
+  - '#saplings'
+  - '#flowers'
+  - '#coal_ores'
+  - '#iron_ores'
+  - '#copper_ores'
+  - '#gold_ores'
+  - '#redstone_ores'
+  - '#lapis_ores'
+  - '#diamond_ores'
+  - '#emerald_ores'
+  - PUMPKIN
+  - MELON
+  - SUGAR_CANE
+  - BAMBOO
+  - CACTUS
+  - VINE
+  - SWEET_BERRY_BUSH
+  - MUSHROOM_STEM
+  - RED_MUSHROOM_BLOCK
+  - BROWN_MUSHROOM_BLOCK
+  - DIRT
+  - GRASS_BLOCK
+  - SHORT_GRASS
+  - TALL_GRASS
+  - STONE
 
 # ----- スポーン内の操作 -----
 spawn-interaction:
   # 右クリックで状態が変わるため、スポーン内で操作を禁止するブロック
   # (ここに無いブロックには干渉しないので、GSit の階段座りなどはそのまま使えます)
   deny-blocks:
-    - REPEATER
-    - COMPARATOR
-    - REDSTONE_WIRE
-    - NOTE_BLOCK
-    - DAYLIGHT_DETECTOR
-    - "#flower_pots"
-    - CAKE
-    - "#candle_cakes"
-    - COMPOSTER
-    - "#cauldrons"
-    - RESPAWN_ANCHOR
-    - CHISELED_BOOKSHELF
-    - DECORATED_POT
-    - "#campfires"
-    - SWEET_BERRY_BUSH
-    - CAVE_VINES
-    - CAVE_VINES_PLANT
-    - BEEHIVE
-    - BEE_NEST
-    - DRAGON_EGG
-    - END_PORTAL_FRAME
-
+  - REPEATER
+  - COMPARATOR
+  - REDSTONE_WIRE
+  - NOTE_BLOCK
+  - DAYLIGHT_DETECTOR
+  - '#flower_pots'
+  - CAKE
+  - '#candle_cakes'
+  - COMPOSTER
+  - '#cauldrons'
+  - RESPAWN_ANCHOR
+  - CHISELED_BOOKSHELF
+  - DECORATED_POT
+  - '#campfires'
+  - SWEET_BERRY_BUSH
+  - CAVE_VINES
+  - CAVE_VINES_PLANT
+  - BEEHIVE
+  - BEE_NEST
+  - DRAGON_EGG
+  - END_PORTAL_FRAME
+  
   # 昇格後のプレイヤーがスポーン内で設置・破壊できるブロック(見習いは不可)
   # 他の人が置いた看板は LWC の自動保護で守られる前提です
   member-blocks:
-    - "#all_signs"
-
+  - '#all_signs'
+  
   # スポーン内に置いてよいトロッコ
   allowed-minecarts:
-    - MINECART
+  - MINECART
 
 # ----- 警戒モード -----
 # 見習いが壊せないブロックを掘り切るたびにスコアが加算され、
@@ -157,47 +161,50 @@ warning:
 # ----- メッセージ(MiniMessage 形式) -----
 # 空文字 "" にするとそのメッセージは表示されません。
 messages:
-  prefix: "<dark_gray>[<green>案内</green>]</dark_gray> "
-
+  prefix: '<dark_gray>[<green>案内</green>]</dark_gray> '
+  
   # 見習い(スポーン外)
-  apprentice-building: "<red>見習い期間中のため、このブロックは壊せません</red><gray>(昇格まであと<remaining>)</gray>"
-  apprentice-resource: "<red>見習い期間中はこのブロックを採れません</red><gray>(昇格まであと<remaining>)</gray>"
-
+  apprentice-building: <red>見習い期間中のため、このブロックは壊せません</red><gray>(昇格まであと<remaining>)</gray>
+  apprentice-resource: <red>見習い期間中はこのブロックを採れません</red><gray>(昇格まであと<remaining>)</gray>
+  
   # スポーン
-  spawn-change: "<red>スポーン地点のブロックは変更できません</red>"
-  spawn-interact: "<red>スポーン地点ではこのブロックを操作できません</red>"
-  spawn-tool: "<red>スポーン地点ではこの道具を使えません</red>"
-  spawn-cart: "<red>スポーン地点では<cart>は置けません。</red><gray>乗るときは普通のトロッコを使ってください</gray>"
+  spawn-change: <red>スポーン地点のブロックは変更できません</red>
+  spawn-interact: <red>スポーン地点ではこのブロックを操作できません</red>
+  spawn-tool: <red>スポーン地点ではこの道具を使えません</red>
+  spawn-cart: <red>スポーン地点では<cart>は置けません。</red><gray>乗るときは普通のトロッコを使ってください</gray>
   # 見習いがスポーン内に member-blocks(看板など)を置こうとしたとき
-  spawn-member-apprentice: "<red>見習い期間中はスポーン地点に看板を設置できません</red><gray>(昇格まであと<remaining>)</gray>"
-
+  spawn-member-apprentice: <red>見習い期間中はスポーン地点に看板を設置できません</red><gray>(昇格まであと<remaining>)</gray>
+  
   # 警戒モード中のチャット
-  warning: "<gold>ここでは壊せません。資源集めは資源ゲートへ</gold>"
-
+  warning: <gold>ここでは壊せません。資源集めは資源ゲートへ</gold>
+  
   # 案内
-  shigen-guide: "<click:run_command:'/shigen'><hover:show_text:'<gray>クリックで移動'><green>▶ /shigen で資源ゲートへ移動</green></hover></click>"
+  shigen-guide: <click:run_command:'/shigen'><hover:show_text:'<gray>クリックで移動'><green>▶
+    /shigen で資源ゲートへ移動</green></hover></click>
   # <time> はリセット時刻、<remaining> は残り時間(1日以上なら「あと○日」、1日未満なら「あと○時間○分」)
-  reset-notice: "<yellow>資源ワールドは毎月<day>日<time>にリセットされます(<remaining>)</yellow>"
-  reset-notice-soon: "<red><bold>資源ワールドは毎月<day>日<time>にリセットされます(<remaining>)</bold></red>"
-  minarai-guide: "<click:run_command:'/minarai'><hover:show_text:'<gray>クリックで実行'><aqua>▶ /minarai で残り時間を確認</aqua></hover></click>"
-
+  reset-notice: <yellow>資源ワールドは毎月<day>日<time>にリセットされます(<remaining>)</yellow>
+  reset-notice-soon: <red><bold>資源ワールドは毎月<day>日<time>にリセットされます(<remaining>)</bold></red>
+  minarai-guide: <click:run_command:'/minarai'><hover:show_text:'<gray>クリックで実行'><aqua>▶
+    /minarai で残り時間を確認</aqua></hover></click>
+  
   # /shigen
-  shigen-teleported: "<green>資源ゲートへ移動しました</green>"
-  shigen-failed: "<red>資源ゲートへ移動できませんでした。管理者に連絡してください</red>"
-  setgate-success: "<green>現在地を資源ゲートの移動先に設定しました</green>"
-
+  shigen-teleported: <green>資源ゲートへ移動しました</green>
+  shigen-failed: <red>資源ゲートへ移動できませんでした。管理者に連絡してください</red>
+  setgate-success: <green>現在地を資源ゲートの移動先に設定しました</green>
+  
   # その他
-  welcome: "<green>ようこそ!</green><white>最初の<hours>時間は見習い期間で、他の人の建築や景観は壊せません。資源は資源ワールドで自由に集められます</white>"
-  promoted-title: "<gold>見習い期間が終了しました!</gold>"
-  promoted-subtitle: "<white>これからは自由に建築・採掘できます</white>"
-  status-apprentice: "<white>見習い期間中です。昇格まであと<green><remaining></green></white>"
-  status-member: "<white>あなたは見習いではありません</white>"
-  admin-notify: "<yellow><player> さんが見習い期間中にブロックの破壊を繰り返し試みています</yellow><gray>(<world> <x>, <y>, <z>)</gray>"
-  reload-success: "<green>設定を再読み込みしました</green>"
-  reload-failed: "<red>設定の再読み込みに失敗しました: <error></red>"
-  no-permission: "<red>権限がありません</red>"
-  player-only: "このコマンドはプレイヤーのみ実行できます(/minarai reload はコンソールからも使えます)"
-
+  welcome: <green>ようこそ!</green><white>最初の<hours>時間は見習い期間で、他の人の建築や景観は壊せません。資源採取は必ず資源ワールドでお願いします</white>
+  promoted-title: <gold>見習い期間が終了しました!</gold>
+  promoted-subtitle: <white>これからは自由に建築・採掘できます</white>
+  status-apprentice: <white>見習い期間中です。昇格まであと<green><remaining></green></white>
+  status-member: <white>あなたは見習いではありません</white>
+  admin-notify: <yellow><player> さんが見習い期間中にブロックの破壊を繰り返し試みています</yellow><gray>(<world>
+    <x>, <y>, <z>)</gray>
+  reload-success: <green>設定を再読み込みしました</green>
+  reload-failed: '<red>設定の再読み込みに失敗しました: <error></red>'
+  no-permission: <red>権限がありません</red>
+  player-only: このコマンドはプレイヤーのみ実行できます(/minarai reload はコンソールからも使えます)
+  
   # トロッコの表示名(spawn-cart の <cart> に入ります)
   cart-names:
     CHEST_MINECART: チェスト付きトロッコ
