@@ -77,7 +77,7 @@ final class SpawnListener implements Listener {
         if (!inside && e instanceof BlockMultiPlaceEvent multi) {
             // ベッドやドアなど、範囲外から一部だけ範囲内にはみ出す設置
             for (BlockState st : multi.getReplacedBlockStates()) {
-                if (zone.contains(st.getWorld().getName(), st.getX(), st.getZ())) {
+                if (zone.contains(st.getWorld().getName(), st.getX(), st.getY(), st.getZ())) {
                     inside = true;
                     break;
                 }
@@ -118,18 +118,18 @@ final class SpawnListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
-        if (b == null || !zone().contains(b)) return;
+        if (b == null || !zone().containsColumn(b)) return;
         Player p = e.getPlayer();
         Material type = b.getType();
 
         if (e.getAction() == Action.PHYSICAL) {
-            // 畑の踏み荒らし・亀の卵(感圧板などはそのまま)
+            // 畑の踏み荒らし・亀の卵(感圧板などはそのまま)。地下の共同農場も守るため高さは問わない
             if ((type == Material.FARMLAND || type == Material.TURTLE_EGG) && !bypass(p)) {
                 e.setUseInteractedBlock(Event.Result.DENY);
             }
             return;
         }
-        if (e.getAction() != Action.RIGHT_CLICK_BLOCK || bypass(p)) return;
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK || !zone().contains(b) || bypass(p)) return;
 
         GuardSettings s = plugin.settings();
         ItemStack item = e.getItem();
@@ -241,7 +241,7 @@ final class SpawnListener implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityTrample(EntityInteractEvent e) {
         Material type = e.getBlock().getType();
-        if ((type == Material.FARMLAND || type == Material.TURTLE_EGG) && zone().contains(e.getBlock())) {
+        if ((type == Material.FARMLAND || type == Material.TURTLE_EGG) && zone().containsColumn(e.getBlock())) {
             e.setCancelled(true);
         }
     }
@@ -265,7 +265,7 @@ final class SpawnListener implements Listener {
 
     private static boolean anyInside(Zone zone, List<BlockState> states) {
         for (BlockState st : states) {
-            if (zone.contains(st.getWorld().getName(), st.getX(), st.getZ())) return true;
+            if (zone.contains(st.getWorld().getName(), st.getX(), st.getY(), st.getZ())) return true;
         }
         return false;
     }

@@ -108,7 +108,8 @@ final class GuardSettings {
                 requireInt(c, "spawn-protection.min-x"),
                 requireInt(c, "spawn-protection.min-z"),
                 requireInt(c, "spawn-protection.max-x"),
-                requireInt(c, "spawn-protection.max-z"));
+                requireInt(c, "spawn-protection.max-z"),
+                requireInt(c, "spawn-protection.min-y"));
 
         s.resourceGate = gate(c, "resource-gate");
         // 資源ネザーゲートは任意。未設定の間は /shigennether で移動できない
