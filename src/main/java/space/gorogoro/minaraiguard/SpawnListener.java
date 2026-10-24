@@ -124,7 +124,9 @@ final class SpawnListener implements Listener {
 
         if (e.getAction() == Action.PHYSICAL) {
             // 畑の踏み荒らし・亀の卵(感圧板などはそのまま)。地下の共同農場も守るため高さは問わない
-            if ((type == Material.FARMLAND || type == Material.TURTLE_EGG) && !bypass(p)) {
+            // ただし min-y より下では、昇格後のプレイヤーはスポーン保護の外と同じ扱い
+            if ((type == Material.FARMLAND || type == Material.TURTLE_EGG) && !bypass(p)
+                    && (zone().contains(b) || plugin.apprentices().isApprentice(p))) {
                 e.setUseInteractedBlock(Event.Result.DENY);
             }
             return;
