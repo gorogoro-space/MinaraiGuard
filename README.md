@@ -111,6 +111,8 @@ gradle build
 | `/minarai setgate nether` | 現在地と向きを `/shigennether` の移動先に設定 | `minarai.admin` |
 | `/minarai reload` | 設定を再読み込み | `minarai.admin` |
 
+別のワールドにあるゲートへ移動するときは、頭に乗せている MOB やプレイヤーを降ろしてから移動します(乗客がいると別のワールドへテレポートできないため)。
+
 ## 権限
 
 | 権限 | 説明 | 既定 |

@@ -75,6 +75,7 @@
 - `/minarai`: 見習いの残り時間を表示
 - `/shigen`: 資源ゲート前へ移動。全員使える(権限で縛らない。`minarai.shigen` を明示的に false にした場合のみ拒否)。移動後に資源ワールドのリセット案内を表示
 - `/shigennether`: 資源ネザーゲート前へ移動。/shigen と同じ扱い(`minarai.shigennether`)。移動先 `resource-nether-gate` は任意設定で、未設定なら移動できない
+- /shigen・/shigennether で別のワールドへ移動するときは、乗客(頭に乗せた MOB・人など)を降ろしてから移動する。同じワールド内では降ろさない(乗客ごと移動できる)
 - `/minarai setgate`: 現在地と向きを /shigen の移動先として保存(管理者)
 - `/minarai setgate nether`: 現在地と向きを /shigennether の移動先として保存(管理者)
 - `/minarai reload`: 設定の再読み込み(管理者)
@@ -88,6 +89,7 @@
 - `config.getString(path, "")` のように既定値を渡すと、jar 内 config.yml の既定値が参照されない。既定値なしで取得して null を判定すること
 - plugin.yml で `default: true` にした権限でも、登録されないと Bukkit は「OP のみ」として扱う。全員向けの機能を権限で縛らない
 - IntelliJ の「アーティファクトのビルド」はクラスファイルが入らないことがある。必ず Gradle でビルドする
+- Paper は乗客がいるプレイヤーを別のワールドへテレポートさせない(`CraftPlayer.teleport0` が false を返す。`PlayerTeleportEvent` より前の判定なのでイベントでは回避できない)。以前は乗り物から降りるだけで乗客を降ろさずに `teleportAsync` していたため、乗客がいる人の別ワールドへの /shigen が `-failed` になっていた。今は別のワールドのときだけ、先に `getChunkAtAsync` で移動先のチャンクを読み込み、メインスレッドの同じ tick で `eject()` → 同期の `teleport()` を行う。`teleportAsync` はチャンクの読み込み中に間が空き、その間にほかのプラグインが見た目の乗客を乗せ直す(1 秒ごとのタスクなど)とまた失敗するため
 
 ## ファイル構成(src/main/java/space/gorogoro/minaraiguard/)
 
