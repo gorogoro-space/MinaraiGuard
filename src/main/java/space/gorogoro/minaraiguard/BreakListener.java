@@ -12,9 +12,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 /**
- * ブロック破壊の判定(スポーン保護と見習いのルール)。
+ * ブロック破壊の判定(スポーン保護と見習いのルール)と、見習いの溶岩バケツの制限。
  * 掘り始め(BlockDamageEvent)でアクションバーを先に出し、掘る時間を無駄にさせない。
  */
 final class BreakListener implements Listener {
@@ -79,10 +80,33 @@ final class BreakListener implements Listener {
         }
     }
 
+    /**
+     * 見習いの溶岩バケツを止める(溶岩荒らし対策)。
+     * 案内からは見習いや昇格との関係がわからないよう、残り時間やコマンドの案内は出さない。
+     * スポーン内は SpawnListener(LOW)が先に止めるので、ここでは扱わない。
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBucketEmpty(PlayerBucketEmptyEvent e) {
+        if (e.getBucket() != Material.LAVA_BUCKET) return;
+        Block b = e.getBlock();
+        if (!plugin.settings().lavaDenyWorlds.contains(b.getWorld().getName())) return;
+        Player p = e.getPlayer();
+        if (!plugin.apprentices().isApprentice(p)) return;
+        e.setCancelled(true);
+
+        long now = System.currentTimeMillis();
+        if (plugin.warnings().record(p.getUniqueId(), b, now)) notifyAdmins(p, b, now, "admin-notify-lava");
+        plugin.messenger().deniedWithoutGuide(p, "apprentice-lava", "warning-lava");
+    }
+
     private void notifyAdmins(Player p, Block b, long now) {
+        notifyAdmins(p, b, now, "admin-notify");
+    }
+
+    private void notifyAdmins(Player p, Block b, long now, String key) {
         if (!plugin.settings().notifyAdmins) return;
         if (!plugin.warnings().tryMarkNotified(p.getUniqueId(), now)) return;
-        Component msg = plugin.messenger().render("admin-notify",
+        Component msg = plugin.messenger().render(key,
                 Placeholder.unparsed("player", p.getName()),
                 Placeholder.unparsed("world", b.getWorld().getName()),
                 Placeholder.unparsed("x", String.valueOf(b.getX())),

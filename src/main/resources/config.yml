@@ -146,6 +146,11 @@ apprentice:
       - TWISTING_VINES
       - TWISTING_VINES_PLANT
 
+  # 見習いが溶岩バケツで溶岩を置けないワールド(溶岩荒らし対策)
+  # 汲むことはできます。スポーン内はスポーン保護で全員が止められます
+  lava-deny-worlds:
+  - world
+
 # ----- スポーン内の操作 -----
 spawn-interaction:
   # 右クリックで状態が変わるため、スポーン内で操作を禁止するブロック
@@ -209,6 +214,9 @@ messages:
   # 見習い(スポーン外)
   apprentice-building: <red>見習い期間中のため、このブロックは壊せません</red><gray>(昇格まであと<remaining>)</gray>
   apprentice-resource: <red>見習い期間中はこのブロックを採れません</red><gray>(昇格まであと<remaining>)</gray>
+  # 見習いが溶岩バケツを使おうとしたとき(lava-deny-worlds のワールド)。チャット案内もこの文面だけです
+  # 昇格すれば使えると読み取れないよう、見習い・残り時間・/minarai には触れないでください
+  apprentice-lava: <red>溶岩は置けません</red>
   
   # スポーン
   spawn-change: <red>スポーン地点のブロックは変更できません</red>
@@ -220,6 +228,8 @@ messages:
   
   # 警戒モード中のチャット
   warning: <gold>ここでは壊せません。資源集めは資源ゲートへ</gold>
+  # 溶岩バケツで警戒モードになったときのチャット(案内のリンクは付きません)
+  warning-lava: <red>溶岩は置けません</red>
   
   # 案内
   shigen-guide: <click:run_command:'/shigen'><hover:show_text:'<gray>クリックで移動'><green>▶
@@ -248,6 +258,8 @@ messages:
   status-apprentice: <white>見習い期間中です。昇格まであと<green><remaining></green></white>
   status-member: <white>あなたは見習いではありません</white>
   admin-notify: <yellow><player> さんが見習い期間中にブロックの破壊を繰り返し試みています</yellow><gray>(<world>
+    <x>, <y>, <z>)</gray>
+  admin-notify-lava: <yellow><player> さんが見習い期間中に溶岩の設置を繰り返し試みています</yellow><gray>(<world>
     <x>, <y>, <z>)</gray>
   reload-success: <green>設定を再読み込みしました</green>
   reload-failed: '<red>設定の再読み込みに失敗しました: <error></red>'

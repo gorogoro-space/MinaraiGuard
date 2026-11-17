@@ -32,12 +32,13 @@ final class GuardSettings {
             "prefix",
             "apprentice-building", "apprentice-resource",
             "spawn-change", "spawn-interact", "spawn-tool", "spawn-cart", "spawn-member-apprentice",
-            "warning",
+            "apprentice-lava",
+            "warning", "warning-lava",
             "shigen-guide", "reset-notice", "reset-notice-soon", "minarai-guide",
             "shigen-teleported", "shigen-failed", "setgate-success",
             "shigennether-guide", "shigennether-teleported", "shigennether-failed", "setgate-nether-success",
             "welcome", "promoted-title", "promoted-subtitle",
-            "status-apprentice", "status-member", "admin-notify",
+            "status-apprentice", "status-member", "admin-notify", "admin-notify-lava",
             "reload-success", "reload-failed", "no-permission", "player-only");
 
     private static final List<EntityType> MINECART_TYPES = List.of(
@@ -68,6 +69,7 @@ final class GuardSettings {
     Set<String> apprenticeWorlds;
     BlockLists defaultBlocks;
     Map<String, BlockLists> worldBlocks; // world-blocks で個別に指定したワールド
+    Set<String> lavaDenyWorlds; // 見習いが溶岩バケツを使えないワールド
 
     // スポーン内の操作
     EnumSet<Material> spawnDenyBlocks;
@@ -128,6 +130,7 @@ final class GuardSettings {
             String path = "apprentice.world-blocks." + world;
             if (c.contains(path)) s.worldBlocks.put(world, blockLists(c, path, log));
         }
+        s.lavaDenyWorlds = new HashSet<>(c.getStringList("apprentice.lava-deny-worlds"));
 
         s.spawnDenyBlocks = materials(c.getStringList("spawn-interaction.deny-blocks"), "spawn-interaction.deny-blocks", log);
         s.spawnMemberBlocks = materials(c.getStringList("spawn-interaction.member-blocks"), "spawn-interaction.member-blocks", log);

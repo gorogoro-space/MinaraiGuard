@@ -80,6 +80,30 @@ final class Messenger {
         if (guide) line(p, render("minarai-guide"));
     }
 
+    /**
+     * 制限にかかったときの通知(コマンドの案内なし)。
+     * チャットは初回と警戒モード中だけで、警戒モード中は warningKey の文面を出す。
+     */
+    void deniedWithoutGuide(Player p, String key, String warningKey) {
+        Component body = render(key);
+        if (body != null) p.sendActionBar(body);
+
+        UUID id = p.getUniqueId();
+        long now = System.currentTimeMillis();
+
+        if (plugin.apprentices().isApprentice(p) && plugin.warnings().isWarning(id, now)) {
+            Long last = lastWarningChat.get(id);
+            if (last != null && now - last < plugin.settings().warningChatIntervalMs) return;
+            lastWarningChat.put(id, now);
+            guided.add(id);
+            chat(p, render(warningKey));
+            return;
+        }
+
+        if (!guided.add(id)) return; // このログイン中はすでに案内済み
+        chat(p, body);
+    }
+
     /** ネザーにいるときは資源ネザーゲート、それ以外は資源ゲートを案内する */
     private static String gateGuideKey(Player p) {
         return p.getWorld().getEnvironment() == World.Environment.NETHER ? "shigennether-guide" : "shigen-guide";
